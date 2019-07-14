@@ -47,5 +47,6 @@ Route::post('/card/insert/{id}','Card@newcard');
 Route::get('/card/template/get','Card@template_get');
 Route::get('/card/template/Coordinate' ,'Card@template_Coordinate');
 
-Route::get('/card/list/get/{id}','Card@get');
-Route::get('/card/data/get/{meisiid}','Card@card_get');
+Route::get('/card/allget/{id}','Card@AllCardTableReturn');
+Route::get('/card/return','Card@CardReturn');
+Route::get('/card/infomation/{meisiid}','Card@CardInformationGet');
