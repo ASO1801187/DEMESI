@@ -70,11 +70,10 @@ class Card extends Controller
                     });
                 }
 
-//                $text = 'http://localhost:8081/untitled/public/card/data/get/' . $id;
-                $path = base_path() ."/public/meisi/".$time;
+                $path = base_path() ."/public/meisi/".$time.".png";
 
                 $img->save($path);
-                $path = "/public/meisi/".$time;
+                $path = "/public/meisi/".$time.".png";
 
                 $param = [
                     'id' => $id,
@@ -82,21 +81,19 @@ class Card extends Controller
                     'tenple_id' => $tenple_id
                 ];
 
+
                 try {
                     DB::beginTransaction();
                     DB::insert('insert into meisi(user_id,path,tenple_id)values(:id,:path,:tenple_id)',$param);
                     DB::commit();
                     try {
+                        $ans = DB::select('select meisi_id from meisi where path="'.$path.'"');
 
-                        $sql = 'select meisi_id from meisi where path='.$path;
-                        dump($sql);
-                        $ans = DB::select('select meisi_id from meisi where path='.$path);
-
-                        $text = 'http://localhost:8081/untitled/public/card/data/get/' . (String)$ans->meisi_id;
+                        $text = 'http://localhost:8081/untitled/public/card/data/get/' . (String)$ans[0]->meisi_id;
                         $qrcode = new QRCode();
                         $position = 'bottom-right';
                         $img->insert($qrcode->render($text), $position, 10, 20);
-                        $img->save($path);
+                        $img->save();
                         $result["result"] = 1;
 
                     } catch (\PDOException $e) {
