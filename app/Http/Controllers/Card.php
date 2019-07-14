@@ -22,9 +22,8 @@ class Card extends Controller
 
     function template_Coordinate(Request $request){
         $tenple_id = $request->tenple_id;
-
         try {
-            $result = DB::select('select tenple_data,tenple_id  from tenple_information where tenple_id='.$tenple_id);
+            $result = DB::select('select tenple_data from tenple_information where tenple_id="'.$tenple_id.'"');
             return json_encode($result);
 
         } catch (\PDOException $e) {
@@ -105,7 +104,7 @@ class Card extends Controller
                     DB::beginTransaction();
                     foreach ($ans as $value) {
                         $data_name = $value->tenple_data;
-                        $insert_data =$request->$value_ans;
+                        $insert_data =$request->$data_name;
                         $param = [
                             'id' => $meisi_id[0]->meisi_id,
                             'data_name' => $data_name,
@@ -155,4 +154,6 @@ class Card extends Controller
 
         }
     }
+
+
 }
