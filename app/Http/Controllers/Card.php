@@ -157,7 +157,7 @@ class Card extends Controller
         ];
         try{
             DB::beginTransaction();
-            DB::insert('insert into meisi_collection(user_id, meisi_id) value(:user_id,:meisi_id)',$param);
+            DB::insert('insert into meisi_collection(user_id, meisi_id, ) value(:user_id,:meisi_id)',$param);
             DB::commit();
             return json_encode(1);
 
@@ -170,7 +170,15 @@ class Card extends Controller
     }
 
     function CollectionReturn(Request $request){
+        $param = $request->user_id;
 
+        try{
+//            $result = DB::select('select meisi_id from meisi_collection where ="'.$param.'"');  meisi.meisi_id,meisi.user_id
+            $result = DB::select('select meisi.meisi_id,meisi.user_id from meisi_collection inner join meisi on meisi_collection.meisi_id = meisi.meisi_id where meisi_collection.user_id = "'.$param.'"');
+            return json_encode($result);
+        }catch (\PDOException $e){
+            return $e;
+        }
     }
 
 

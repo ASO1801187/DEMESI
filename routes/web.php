@@ -49,5 +49,5 @@ Route::get('/card/template/Coordinate' ,'Card@template_Coordinate');
 
 Route::get('/card/allget/{id}','Card@AllCardTableReturn');
 Route::get('/card/infomation/{meisiid}','Card@CardInformationReturn');
-Route::get('/card/collection/{meisi_id}','Card@InsertCollection');
 Route::get('/card/collection/return','Card@CollectionReturn');
+Route::get('/card/collection/{meisi_id}','Card@InsertCollection');
