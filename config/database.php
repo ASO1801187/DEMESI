@@ -39,29 +39,29 @@ return [
             'prefix' => '',
         ],
 
-//        'mysql' => [
-//            'driver' => 'mysql',
-//            'host' => env('DB_HOST', 'mysql139.phy.lolipop.lan'),
-//            'port' => env('DB_PORT', '3306'),
-//            'database' => env('DB_DATABASE', 'LAA1055607-18001187'),
-//            'username' => env('DB_USERNAME', 'LAA1055607'),
-//            'password' => env('DB_PASSWORD', 'takahiroz7'),
-//            'unix_socket' => env('DB_SOCKET', ''),
-//            'charset' => 'utf8mb4',
-//            'collation' => 'utf8mb4_unicode_ci',
-//        ],
-
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '33066'),
-            'database' => env('DB_DATABASE', 'demesi'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', 'password'),
+            'host' => env('DB_HOST', 'mysql139.phy.lolipop.lan'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'LAA1055607-18001187'),
+            'username' => env('DB_USERNAME', 'LAA1055607'),
+            'password' => env('DB_PASSWORD', 'takahiroz7'),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
         ],
+
+//        'mysql' => [
+//            'driver' => 'mysql',
+//            'host' => env('DB_HOST', 'localhost'),
+//            'port' => env('DB_PORT', '33066'),
+//            'database' => env('DB_DATABASE', 'demesi'),
+//            'username' => env('DB_USERNAME', 'root'),
+//            'password' => env('DB_PASSWORD', 'password'),
+//            'unix_socket' => env('DB_SOCKET', ''),
+//            'charset' => 'utf8mb4',
+//            'collation' => 'utf8mb4_unicode_ci',
+//        ],
 
         'pgsql' => [
             'driver' => 'pgsql',
