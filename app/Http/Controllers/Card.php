@@ -15,8 +15,10 @@ class Card extends Controller
         try {
             $result = DB::select('select tenple_id,temple_sample from tenple_flag where tenple_flag=1');
             return json_encode($result);
+
         } catch (\PDOException $e) {
             return $e;
+
         }
     }
 
@@ -35,7 +37,6 @@ class Card extends Controller
 
     function newcard(Request $request, $id){
         $result = ["result" => 0];
-
         if (!empty($_FILES)) {
             $tenple_id = $request->tenple_id;
             try {
@@ -50,7 +51,6 @@ class Card extends Controller
             $info = $_FILES['img']['type'];
             $info = explode('/',$info);
             $a = base_path().'/public/img/'.$time.".".$info[1]; //$time;
-
             if (move_uploaded_file($_FILES['img']['tmp_name'], $a)) {
                 $img = Image::make($a);
                 $img->fit(1254, 758);
@@ -61,7 +61,6 @@ class Card extends Controller
                     $text =$request->$value_ans;
                     $x = $value->tenple_x;
                     $y = $value->tenple_y;
-
                     $img->text($text, $x, $y, function ($font) {
                         $font->file(base_path() . '/public/font/APJapanesefont.ttf');
                         $font->size(40);
@@ -70,24 +69,20 @@ class Card extends Controller
                     });
 
                 }
-
                 $path = base_path() ."/public/meisi/".$time.".png";
-
                 $img->save($path);
                 $path = "/public/meisi/".$time.".png";
-
                 $param = [
                     'id' => $id,
                     'path' => $path,
                     'tenple_id' => $tenple_id
 
                 ];
-
                 try {
                     DB::beginTransaction();
                     DB::insert('insert into meisi(user_id,path,tenple_id)values(:id,:path,:tenple_id)',$param);
                     $meisi_id = DB::select('select meisi_id from meisi where path="'.$path.'"');
-                    $text = 'http://localhost:8081/untitled/public/card/infomation/' . (String)$meisi_id[0]->meisi_id;
+                    $text = 'http://localhost:8081/untitled/public/card/collection/' . (String)$meisi_id[0]->meisi_id;
                     $qrcode = new QRCode();
                     $position = 'bottom-right';
                     $img->insert($qrcode->render($text), $position, 10, 20);
@@ -99,7 +94,6 @@ class Card extends Controller
                     return $e;
 
                 }
-
                 try{
                     DB::beginTransaction();
                     foreach ($ans as $value) {
@@ -120,8 +114,8 @@ class Card extends Controller
                 }catch (\PDOException $e){
                     DB::rollBack();
                     return $e;
-                }
 
+                }
             }else{
                 $result = 3;
 
@@ -144,7 +138,7 @@ class Card extends Controller
         }
     }
 
-    function CardInformationGet(Request $request, $meisiid){
+    function CardInformationReturn(Request $request, $meisiid){
         try {
             $result = DB::select('select * from meisi_data where meisi_id ='.$meisiid);
             return json_encode($result);
@@ -153,6 +147,30 @@ class Card extends Controller
             return $e;
 
         }
+    }
+
+    function InsertCollection(Request $request, $meisi_id){
+        $param = [
+            'user_id' => $request->user_id,
+            'meisi_id' => $meisi_id,
+
+        ];
+        try{
+            DB::beginTransaction();
+            DB::insert('insert into meisi_collection(user_id, meisi_id) value(:user_id,:meisi_id)',$param);
+            DB::commit();
+            return json_encode(1);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return $e;
+            return json_encode(0);
+
+        }
+    }
+
+    function CollectionReturn(Request $request){
+
     }
 
 
