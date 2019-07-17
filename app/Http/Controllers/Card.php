@@ -17,25 +17,25 @@ class Card extends Controller
             return json_encode($result);
 
         } catch (\PDOException $e) {
-            return $e;
+            return json_encode($e);
 
         }
     }
 
     function template_Coordinate(Request $request){
-        $tenple_id = $request->tenple_id;
+        $tenple_id = $request->temple_id;
         try {
             $result = DB::select('select tenple_data from tenple_information where tenple_id="'.$tenple_id.'"');
             return json_encode($result);
 
         } catch (\PDOException $e) {
-            return $e;
+            return json_encode($e);
 
         }
     }
 
 
-    function newcard(Request $request, $id){
+    function newcard(Request $request, $user_id){
         $result = ["result" => 0];
         if (!empty($_FILES)) {
             $tenple_id = $request->tenple_id;
@@ -43,10 +43,9 @@ class Card extends Controller
                 $ans = DB::select('select tenple_data, tenple_x, tenple_y from tenple_information where tenple_id='.$tenple_id);
 
             } catch (\PDOException $e) {
-                return $e;
-
+                return json_encode($e);
             }
-            $id = $request->id;
+            $id = $user_id;
             $time = date("YmdHis");
             $info = $_FILES['img']['type'];
             $info = explode('/',$info);
@@ -91,8 +90,7 @@ class Card extends Controller
 
                 } catch (\PDOException $e) {
                     DB::rollBack();
-                    return $e;
-
+                    return json_encode($e);
                 }
                 try{
                     DB::beginTransaction();
@@ -113,8 +111,7 @@ class Card extends Controller
 
                 }catch (\PDOException $e){
                     DB::rollBack();
-                    return $e;
-
+                    return json_encode($e);
                 }
             }else{
                 $result = 3;
@@ -127,57 +124,57 @@ class Card extends Controller
         return json_encode($result);
     }
 
-    function AllCardTableReturn(Request $request, $id){
+    function AllCardTableReturn(Request $request, $user_id){
         try {
-            $result = DB::select('select * from meisi where user_id ='.$id);
+            $result = DB::select('select * from meisi where user_id ='.$user_id);
             return json_encode($result);
 
         } catch (\PDOException $e) {
-            return $e;
-
+            return json_encode($e);
         }
     }
 
-    function CardInformationReturn(Request $request, $meisiid){
+    function CardInformationReturn(Request $request, $meisi_id){
         try {
-            $result = DB::select('select * from meisi_data where meisi_id ='.$meisiid);
+            $result = DB::select('select * from meisi_data where meisi_id ='.$meisi_id);
             return json_encode($result);
 
         } catch (\PDOException $e) {
-            return $e;
-
+            return json_encode($e);
         }
     }
 
-    function InsertCollection(Request $request, $meisi_id){
+    function InsertCollection(Request $request, $meisi_id, $user_id){
         $param = [
-            'user_id' => $request->user_id,
+            'user_id' => $user_id,
             'meisi_id' => $meisi_id,
 
         ];
+        $result = 0;
         try{
             DB::beginTransaction();
             DB::insert('insert into meisi_collection(user_id, meisi_id, ) value(:user_id,:meisi_id)',$param);
             DB::commit();
-            return json_encode(1);
+            $result = 1;
+            return json_encode($result);
 
         }catch (\PDOException $e){
             DB::rollBack();
             return $e;
-            return json_encode(0);
+            return json_encode($result);
 
         }
     }
 
-    function CollectionReturn(Request $request){
-        $param = $request->user_id;
+    function CollectionReturn(Request $request, $user_id){
+        $param = $user_id;
 
         try{
 //            $result = DB::select('select meisi_id from meisi_collection where ="'.$param.'"');  meisi.meisi_id,meisi.user_id
             $result = DB::select('select meisi.meisi_id,meisi.user_id from meisi_collection inner join meisi on meisi_collection.meisi_id = meisi.meisi_id where meisi_collection.user_id = "'.$param.'"');
             return json_encode($result);
         }catch (\PDOException $e){
-            return $e;
+            return json_encode($e);
         }
     }
 

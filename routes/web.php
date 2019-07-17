@@ -42,12 +42,16 @@ Route::get('/company/login', 'Company@login');
 Route::get('/company/getData', 'Company@getData');
 Route::get('/company/update', 'Company@update');
 
-Route::post('/card/insert/{id}','Card@newcard');
 
-Route::get('/card/template/get','Card@template_get');
-Route::get('/card/template/Coordinate' ,'Card@template_Coordinate');
 
-Route::get('/card/allget/{id}','Card@AllCardTableReturn');
-Route::get('/card/infomation/{meisiid}','Card@CardInformationReturn');
-Route::get('/card/collection/return','Card@CollectionReturn');
-Route::get('/card/collection/{meisi_id}','Card@InsertCollection');
+
+
+Route::get('/card/template_get','Card@template_get');
+Route::get('/card/template_details_get' ,'Card@template_Coordinate');
+
+Route::post('/card/insert/{user_id}','Card@newcard');
+Route::get('/card/allget/{user_id}','Card@AllCardTableReturn');
+Route::get('/card/infomation/{meisi_id}','Card@CardInformationReturn');
+Route::get('/card/collection/{user_id}/{meisi_id}','Card@InsertCollection');
+Route::get('/card/collection_return/{user_id}','Card@CollectionReturn');
+
