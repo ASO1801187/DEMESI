@@ -49,7 +49,7 @@ Route::get('/company/update', 'Company@update');
 Route::get('/card/template_get','Card@template_get');
 Route::get('/card/template_details_get' ,'Card@template_Coordinate');
 
-Route::post('/card/insert/{user_id}','Card@newcard');
+Route::get('/card/insert/{user_id}','Card@newcard');
 Route::get('/card/allget/{user_id}','Card@AllCardTableReturn');
 Route::get('/card/infomation/{meisi_id}','Card@CardInformationReturn');
 Route::get('/card/collection/{user_id}/{meisi_id}','Card@InsertCollection');
