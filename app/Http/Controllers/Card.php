@@ -99,7 +99,7 @@ class Card extends Controller
                 DB::beginTransaction();
                 DB::insert('insert into meisi(user_id,path,template_id)values(:id,:path,:tenple_id)',$param);
                 $meisi_id = DB::select('select meisi_id from meisi where path="'.$path.'"');
-                $text = 'http://localhost:8081/untitled/public/card/collection/' . (String)$meisi_id[0]->meisi_id;
+                $text = 'http://18001187.pupu.jp/DEMESI/public/card/collection/' . (String)$meisi_id[0]->meisi_id;
                 $qrcode = new QRCode();
                 $position = 'bottom-right';
                 $img->insert($qrcode->render($text), $position, 10, 20);

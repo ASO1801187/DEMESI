@@ -30,7 +30,7 @@ class ResetMail extends Mailable
      */
     public function build()
     {
-        $frontendURL = "http://18001187.pupu.jp/untitled";
+        $frontendURL = "http://18001187.pupu.jp/DEMESI";
         return $this->subject('パスワードリセットメール')
             ->markdown('emails.activations.reset')
             ->with([

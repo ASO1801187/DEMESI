@@ -28,7 +28,7 @@ class ActivationCreted extends Mailable
      */
     public function build()
     {
-        $frontendURL = "http://18001187.pupu.jp/untitled";
+        $frontendURL = "http://18001187.pupu.jp/DEMESI";
         return $this->subject('アカウント有効化メール')
             ->markdown('emails.activations.created')
             ->with([
