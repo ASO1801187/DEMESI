@@ -28,6 +28,31 @@ class User extends Controller
         ];
 
         $result =  0;
+
+        if ($request->user_name==""){
+            $result = 6;
+        }
+
+        if (preg_match("/^[a-zA-Z0-9]{8,15}$/","$request->user_password")){
+        }else{
+            $result = 6;
+        }
+
+        if (preg_match("|^[0-9a-z_./?-]+@([0-9a-z-]+\.)+[0-9a-z-]+$|","$request->mailaddress")){
+        }else{
+            $result = 6;
+        }
+
+        if (preg_match("/^[0-9]{10,11}$/","$request->phone_number")){
+        }else{
+            $result = 6;
+        }
+
+        if ($result == 6){
+            $box = array("result"=>$result);
+            return $box;
+        }
+
         $Anser1 = DB::select('select * from user_information where mailaddress=:mailaddress',$mail);
         $Anser2 = DB::select('select * from user_information where phone_number=:phone_number',$phone);
         if ($Anser1 != null && $Anser2 != null){
@@ -46,9 +71,10 @@ class User extends Controller
         }
 
         //データベースの接続開始
-        DB::beginTransaction();
+
         try {
-            DB::insert('insert into user_information(user_name,password,mailaddress,phone_number)values
+            DB::beginTransaction();
+            DB::insert('insert into user_information(user_name,user_password,mailaddress,phone_number)values
            (:user_name,:user_password,:mailaddress,:phone_number)', $param);
             DB::commit();
             // all good
@@ -67,6 +93,7 @@ class User extends Controller
         }
 
         $box = array("result"=>$result);
+        json_encode($box);
         return $box;
     }
 
@@ -77,8 +104,8 @@ class User extends Controller
         ];
         $result=0;
         //データベースの接続開始
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             DB::update('update user_information set Unsubscribe_flag = 1 where user_id = :user_id', $param);
             DB::commit();
             $result=1;
@@ -88,10 +115,10 @@ class User extends Controller
             //エラー発生
         }
         $box = array("result"=>$result);
+        json_encode($box);
         //成功
         return $box;
     }
-
 
     //プロフィール再設定用の情報取得
     function getData(Request $request){
@@ -102,13 +129,13 @@ class User extends Controller
         $items = DB::select('select * from user_information where user_id = :user_id',$param);
         if ($items == null){
             $result = 0;
-            $box = array('$result'=>$result);
+            $box = array('result'=>$result);
             json_encode($box);
             return $box;
         }
         $result = 1;
         $items = $items[0];
-        $box = array('$result'=>$result,'user_name'=>$items->user_name,'user_password'=>$items->password,'mailaddress'=>$items->mailaddress,'phone_number'=>$items->phone_number);
+        $box = array('result'=>$result,'user_name'=>$items->user_name,'user_password'=>$items->user_password,'mailaddress'=>$items->mailaddress,'phone_number'=>$items->phone_number);
         json_encode($box);
         return $box;
     }
@@ -144,6 +171,31 @@ class User extends Controller
             'phone_number' => $request->phone_number,
         ];
         $result = 0;
+
+        if ($request->user_name==""){
+            $result = 6;
+        }
+
+        if (preg_match("/^[a-zA-Z0-9]{8,15}$/","$request->user_password")){
+        }else{
+            $result = 6;
+        }
+
+        if (preg_match("|^[0-9a-z_./?-]+@([0-9a-z-]+\.)+[0-9a-z-]+$|","$request->mailaddress")){
+        }else{
+            $result = 6;
+        }
+
+        if (preg_match("/^[0-9]{10,11}$/","$request->phone_number")){
+        }else{
+            $result = 6;
+        }
+
+        if ($result == 6){
+            $box = array("result"=>$result);
+            return $box;
+        }
+
         $Anser1 = DB::select('select * from user_information where mailaddress=:mailaddress',$mail);
         $Anser2 = DB::select('select * from user_information where phone_number=:phone_number',$phone);
         if ($Anser1 != null && $Anser2 != null){
@@ -159,12 +211,13 @@ class User extends Controller
 
         if ($result==4 || $result== 3 || $result ==2){
             $box = array("result"=>$result);
+            json_encode($box);
             return $box;
         }
 
         //データベースの接続開始
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             DB::update('update user_information set user_name = :user_name where user_id = :user_id', $name);
             DB::update('update user_information set user_password = :user_password where user_id = :user_id', $pass);
             DB::update('update user_information set mailaddress = :mailaddress where user_id = :user_id', $mailaddress);
@@ -180,13 +233,12 @@ class User extends Controller
 
         //成功
         $box = array("result"=>$result);
-        //成功
+        json_encode($box);
         return $box;
-
     }
 
     //パスワード再設定の
-    function id_index(Request $request){
+    function resetmail(Request $request){
         $param = [
             'mailaddress' => $request->mailaddress,
         ];
@@ -194,7 +246,7 @@ class User extends Controller
         $items = DB::select('select user_id from user_information where mailaddress = :mailaddress',$param);
         if ($items == null){
             $result = 0;
-            $box = array('$result'=>$result);
+            $box = array('result'=>$result);
             json_encode($box);
             return $box;
         }else{
@@ -202,7 +254,9 @@ class User extends Controller
         }
         $box = $items[0];
         Mail::to($request->mailaddress)->send(new ResetMail($box));
-        return 1;
+        $box = array('result'=>$result);
+        json_encode($box);
+        return $box;
     }
 
     //パスワードの再設定
@@ -221,14 +275,14 @@ class User extends Controller
         }catch (\Exception $e) {
             DB::rollback();
             $result = 0;
-            $box = array('$result'=>$result);
+            $box = array('result'=>$result);
             json_encode($box);
             return $box;
             //エラー発生
         }
         //成功
         $result = 1;
-        $box = array('$result'=>$result);
+        $box = array('result'=>$result);
         json_encode($box);
         return $box;
     }
@@ -246,14 +300,14 @@ class User extends Controller
         }catch (\Exception $e) {
             DB::rollback();
             $result = 0;
-            $box = array('$result'=>$result);
+            $box = array('result'=>$result);
             json_encode($box);
             return $box;
             //エラー発生
         }
         //成功
         $result = 1;
-        $box = array('$result'=>$result);
+        $box = array('result'=>$result);
         json_encode($box);
         return $box;
     }
@@ -265,20 +319,21 @@ class User extends Controller
             'user_password' => $request->user_password,
         ];
         //IDとパスワード確認
-        $result1 = DB::select('select * from user_information where user_name=:user_name AND  user_password=:user_password
+        $result1 = DB::select('select * from user_information where user_name=:user_name AND user_password=:user_password
         AND Unsubscribe_flag=1 ',$param);
         //行数確認
-
         if ($result1!=null){
-            //存在
+            //成功
+            $items = DB::select('select user_id from user_information where user_name = :user_name AND user_password = :user_password ',$param);
+            $items = $items[0];
             $result = 1;
-            $box = array('$result'=>$result);
+            $box = array('result'=>$result,'user_id'=>$items->user_id);
             json_encode($box);
             return $box;
         }
         //失敗
         $result = 0;
-        $box = array('$result'=>$result);
+        $box = array('result'=>$result);
         json_encode($box);
         return $box;
     }
